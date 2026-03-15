@@ -1,9 +1,9 @@
 
 #' @title linear algebra decompositions for CIV. (internal function.)
 #' @description This function implements linear algebra steps to acquire necessary matrices for CIV construction.
-#' @param G: original instruments with dimension nXp.
-#' @param X: phenotype of interest. dimension nXk.
-#' @param Z: possible pleiotropic phenotypes which have been measured. dimension nXr.
+#' @param G original instruments with dimension nXp.
+#' @param X phenotype of interest. dimension nXk.
+#' @param Z possible pleiotropic phenotypes which have been measured. dimension nXr.
 #' @keywords Cholesky decomposition
 #' @return A list of matrices which will be called by solv_pcc() and pcc_IV().
 #' @examples
@@ -57,8 +57,8 @@ LA_decomposition <- function(G,X,Z){
 
 #' @title Find a unique solution of CIV (internal use).
 #' @description This function find a unique solutin to the constrained instrument problem given matrix A and B.
-#' @param A: matrix given by LA_decomposition().
-#' @param B: matrix given by LA_decomposition().
+#' @param A matrix given by LA_decomposition().
+#' @param B matrix given by LA_decomposition().
 #' @keywords Cholesky decomposition
 #' @return c: solution to the constrained maximization problem.
 #' @return max_value: the maximized correlation value.
@@ -83,8 +83,9 @@ solve_pcc <- function(A,B){
   QTAQ <- crossprod(Q,crossprod(A, Q))
 
   A22 <- QTAQ[(k+1):(p),(k+1):(p)]
+  A22 <- (A22 + t(A22)) / 2
 
-  eg <- eigen(A22)
+  eg <- eigen(A22, symmetric = TRUE)
 
   d <- eg$vectors[,1]
 
@@ -101,9 +102,11 @@ solve_pcc <- function(A,B){
 
 #' @title multiple orthogonal CIV solutions. (internal function)
 #' @description This function find multiple CIV solutions that are orthogonal to each other. Only the first one achive the global maximum correlation.
-#' @param A: matrix given by LA_decomposition().
-#' @param B: matrix given by LA_decomposition().
-#' @param G: original instruments.
+#' @param A matrix given by LA_decomposition().
+#' @param B matrix given by LA_decomposition().
+#' @param G original instruments.
+#' @param inv_GG_square inverse square root of G'G, given by LA_decomposition().
+#' @param no_IV number of instrumental variables to compute. Default is ncol(G)-ncol(B).
 #' @return u_max: the solution of u that would maximize the constrained correlation problem.
 #' @examples
 #' data(simulation)
@@ -147,7 +150,7 @@ pcc_IV <- function(A,B,G, inv_GG_square,no_IV=ncol(G)-ncol(B)){
 
 #' @title Find a unique solution of CIV.
 #' @description This function find the unique CIV solution.
-#' @param MR.data: A data.frame() object containg G,X,Z,Y.
+#' @param MR.data A data.frame() object containg G,X,Z,Y.
 #' @keywords LA_decomposition, solve_pcc.
 #' @return c: solution vector to the constrained maximization problem.
 #' @return max_value: the maximized correlation value.
@@ -180,8 +183,8 @@ CIV <- function(MR.data){
 #'               all samples except this fold, then the CIV solution is applied to the samples  in this fold
 #'               to obtain corresponding CIV. In this way the correlation between samples
 #'               are expected to be reduced.
-#' @param MR.data: a data frame containing G,X,Z,Y.
-#' @param n_folds: number of folds for cross-validation.
+#' @param MR.data a data frame containing G,X,Z,Y.
+#' @param n_folds number of folds for cross-validation.
 #' @return weights: A matrix with dimension \eqn{n_folds * p}. Each row is a CIV solution \eqn{c} from a specific fold.
 #' @return civ.IV: cross-validated CIV instrument \eqn{G^{*}=Gc}.
 #' @return beta_est: causal effect estimation of X on Y using CIV instrument civ.IV
@@ -207,7 +210,7 @@ cv_CIV <- function(MR.data, n_folds = 10 ){
   civ_score <- X
   #weights is a matrix where each row contains weight from each folds
   weights <- NULL
-  flds <- createFolds(c(1:n), k = n_folds, list = TRUE, returnTrain = FALSE)
+  flds <- caret::createFolds(c(1:n), k = n_folds, list = TRUE, returnTrain = FALSE)
 
 
   for(cv_folds in 1:n_folds){
@@ -274,8 +277,8 @@ cv_CIV <- function(MR.data, n_folds = 10 ){
 #' @description This function generate a bootstrapped CIV w/wo correction.
 #'              Specifically, for a bootstrap sample we can generate civ solution u. The boostrap corrected
 #'              solution u is obtained as the global solution u - ( bootrapped average u - global u).
-#' @param MR.data: a data frame containing G,X,Z,Y.
-#' @param n_boots: number of bootstrap samples.
+#' @param MR.data a data frame containing G,X,Z,Y.
+#' @param n_boots number of bootstrap samples.
 #' @return boots.u: bootstrapped CIV solution u (without correction).
 #' @return boots.cor.u: bootstrap corrected solution of u. (suggested)
 #' @examples
@@ -370,9 +373,9 @@ boot_CIV <- function(MR.data, n_boots = 10 ){
 #' @description This function remove highly correlated SNPs. It also
 #' calculate MAF for each snp and delete rare snps with low MAF (e.g. 0.01).
 
-#' @param snp_matrix: SNP matrix with dimension n * p.
-#' @param crit_high_cor: criteria to choose highly correlated SNPs.
-#' @param maf_crit: criteria to choose rare SNPs.
+#' @param snp_matrix SNP matrix with dimension n * p.
+#' @param crit_high_cor criteria to choose highly correlated SNPs.
+#' @param maf_crit criteria to choose rare SNPs.
 #' @return sel_snp: the new dosage matrix of selected SNPs.
 #' @return id_snp: the ids (columns) of selected SNPs in the original SNP matrix.
 #' @examples
@@ -418,8 +421,8 @@ SNP_reduction <- function(snp_matrix,crit_high_cor=0.8,maf_crit =0.01){
 
 #' @title Instrumental variable reduction.
 #' @description This function remove highly correlated IVs. An upgraded function SNP_reduction() is suggested.
-#' @param snp_matrix: IV matrix with dimension n * p.
-#' @param crit_high_cor: criteria to choose highly correlated SNPs. default is 0.8 correlation.
+#' @param snp_matrix IV matrix with dimension n * p.
+#' @param crit_high_cor criteria to choose highly correlated SNPs. default is 0.8 correlation.
 #' @return sel_snp: the selected IVs.
 #' @return id_snp: the ids (columns) of selected IVs in the original IV matrix.
 #' @examples
@@ -445,20 +448,23 @@ IV_reduction <- function(snp_matrix,crit_high_cor=0.8){
 
 #' @title CIV_smooth solution given \eqn{\lambda}. (Internal function)
 #' @description This function finds a CIV_smooth solution of u given a value of \eqn{\lambda}. This function is mostly for internal use. smooth_CIV() is suggested for users to obtain optimal solutions of CIV_smooth.
-#' @param initial: the initial point of u for updating. The CIV solution will be used as the initial point if no choice is made.
-#' @param G: SNP matrix with dimension \eqn{n \times p}.
-#' @param X: phenotype of interest.
-#' @param Z: pleiotropic phenotype Z.
-#' @param GTG: \eqn{G`G}
-#' @param GTMG: \eqn{G`X(X`X)^{-1}X`G}.
-#' @param ZTG: \eqn{Z`G}
-#' @param GTZ: \eqn{G`Z}
-#' @param ZTG_ginv: general inverse of \eqn{Z`G} (ginv(\eqn{Z`G})).
-#' @param null_space: null space of matrices G`Z (null(G`Z)).
-#' @param lambda: a given value (must be specified) for regularization parameter \eqn{\lambda}.
-#' @param accuracy_par: the accuracy threshold parameter to determine if the algorithm converged to a local maximum. Default is 1e-10.
-#' @param last_conv_iters: the maximum iterations to run. Default is 2000.
-#' @param ......: default values for other tuning parameters.
+#' @param initial the initial point of u for updating. The CIV solution will be used as the initial point if no choice is made.
+#' @param G SNP matrix with dimension \eqn{n \times p}.
+#' @param X phenotype of interest.
+#' @param GTG \eqn{G'G}
+#' @param GTMG \eqn{G'X(X'X)^{-1}X'G}.
+#' @param ZTG \eqn{Z'G}
+#' @param GTZ \eqn{G'Z}
+#' @param ZTG_ginv general inverse of \eqn{Z'G}.
+#' @param null_space null space of matrix \eqn{G'Z}.
+#' @param lambda a given value (must be specified) for regularization parameter \eqn{\lambda}.
+#' @param sigma_min the minimum value of \eqn{\sigma}. Default is 0.01.
+#' @param sigma_up the multiplier for updating \eqn{\sigma}. Default is 0.5.
+#' @param stepsize the stepsize for updating u. Default is 0.1.
+#' @param conv_iters the maximum steps when a converged solution is found. Default is 5.
+#' @param stepsize_last the smaller stepsize for refining the solution. Default is 0.0001.
+#' @param accuracy_par the accuracy threshold parameter. Default is 1e-10.
+#' @param last_conv_iters the maximum iterations to run. Default is 2000.
 #' @return mat_u: the trace of all updated iterations of u.
 #' @return opt_solution: the final solution of u.
 #' @return value_list: the iteration values of target function (penalized correlation).
@@ -477,8 +483,8 @@ IV_reduction <- function(snp_matrix,crit_high_cor=0.8){
 #' GTMG <- crossprod(G, crossprod(M,G))
 #' ZTG <- crossprod(Z,G)
 #' GTZ <- crossprod(G,Z)
-#' null_space <- Null( GTZ)
-#' ZTG_ginv <- ginv(ZTG)
+#' null_space <- MASS::Null( GTZ)
+#' ZTG_ginv <- MASS::ginv(ZTG)
 #' lambda <- 1
 #' smooth.lambda1 <- smooth_L0_lambda(null_space = null_space, G = G, X = X, GTG = GTG, lambda = lambda,
 #' GTMG = GTMG, ZTG = ZTG, GTZ = GTZ, ZTG_ginv = ZTG_ginv )
@@ -691,23 +697,20 @@ smooth_L0_lambda <- function(initial = NULL, null_space, G,X,GTG,
 #' @description This function first find the optimal value of \eqn{\lambda} according
 #' to projected prediction error with cross-validation. Then for a given \eqn{\lambda} value multiple intial
 #' points are used to explore potentially multiple modes.
-#' @param initial: the initial value for updating u.
-#' @param G: SNP matrix with dimension \eqn{n \times p}.
-#' @param X: phenotype of interest.
-#' @param Z: pleiotropic phenotype Z.
-#' @param Y: the disease outcome Y.
-#' @param lambda_list: a list of values for regularization parameter lambda. A default list will be chosen if not provided.
-#' @param k_folds: number of folds for cross-validation (to find optimum \eqn{\lambda}). default = 10.
-#' @param n_IV: the number of initial points chosen to explore potential multiple modes. The converged
-#' solutions will be screened to delete redundant solutions. So the final solutions will be less or equal to n_IV. default = 100.
-#' @param sigma_min: the minimum value of \eqn{\sigma} (corresponding to the closeast approximation of \eqn{L_0} penalty). default = 0.01.
-#' @param sigma_up: the moving down multiplier. \eqn{\sigma_{j+1} = sigma_up \times \sigma_{j}}. default = 0.5.
-#' @param stepsize: the stepsize to move solution u. default = 0.1.
-#' @param conv_iters: the maximum steps to allow updating when a converged solution is found. default =5.
-#' @param stepsize_last: When a converged solution is found with stepsize, we update this solution with a smaller stepsize to achive a more precise
-#' local maximum solution. default = 0.0001.
-#' @param last_conv_iters: the maximum iterations to run in the stage of ``refining" optimum solution. default = 2000.
-#' @param ......: default values for other tuning parameters.
+#' @param G SNP matrix with dimension \eqn{n \times p}.
+#' @param X phenotype of interest.
+#' @param Z pleiotropic phenotype Z.
+#' @param Y the disease outcome Y.
+#' @param lambda_list a list of values for regularization parameter lambda. A default list will be chosen if not provided.
+#' @param k_folds number of folds for cross-validation (to find optimum \eqn{\lambda}). default = 10.
+#' @param sigma_min the minimum value of \eqn{\sigma}. default = 0.01.
+#' @param sigma_up the moving down multiplier. default = 0.5.
+#' @param stepsize the stepsize to move solution u. default = 0.1.
+#' @param conv_iters the maximum steps when a converged solution is found. default = 5.
+#' @param stepsize_last the smaller stepsize for refining the solution. default = 0.0001.
+#' @param last_conv_iters the maximum iterations to run. default = 2000.
+#' @param method_lambda method to select lambda. default = "er".
+#' @param n_IV the number of initial points to explore potential multiple modes. default = 100.
 #' @return opt_lambda: the chosen optimum value of \eqn{\lambda} corresponding to the minimum projected prediction error (see paper).
 #' @return IV_mat: the final matrix of CIV instruments with respect to the opt_lambda. Each column is a new instrument.
 #' @return u_mat: the final CIV solutions of u with respect to the opt_lambda. Each column is a converged solution.
@@ -738,8 +741,8 @@ smooth_CIV <- function(G,X,Z,Y, lambda_list = NULL, k_folds =10,
   GTMG <- crossprod(G, crossprod(M,G))
   ZTG <- crossprod(Z,G)
   GTZ <- crossprod(G,Z)
-  null_space <- Null( GTZ)
-  ZTG_ginv <- ginv(ZTG)
+  null_space <- MASS::Null( GTZ)
+  ZTG_ginv <- MASS::ginv(ZTG)
 
   if(length(lambda_list)==0){lambda_list <- c(seq(from=0.01, to=0.09, by = 0.01),
                                               seq(from=0.1,to=1, by=0.1))}
@@ -784,7 +787,7 @@ smooth_CIV <- function(G,X,Z,Y, lambda_list = NULL, k_folds =10,
   pb <- txtProgressBar(min=0, max=length(lambda_list), style=3)
   finish <- 0
 
-  flds <- createFolds(c(1:n), k = k_folds, list = TRUE, returnTrain = FALSE)
+  flds <- caret::createFolds(c(1:n), k = k_folds, list = TRUE, returnTrain = FALSE)
 
 
 
@@ -826,11 +829,11 @@ smooth_CIV <- function(G,X,Z,Y, lambda_list = NULL, k_folds =10,
       Z_train <- Z[train_index,]
       GTG_train <- crossprod(G_train,G_train)
       GTZ_train <- crossprod(G_train,Z_train)
-      null_space_train <- Null( GTZ_train)
+      null_space_train <- MASS::Null( GTZ_train)
       M_train <- tcrossprod ( tcrossprod ( X_train , solve(crossprod(X_train,X_train) ) ), X_train )
       GTMG_train <- crossprod(G_train, crossprod(M_train,G_train))
       ZTG_train <- crossprod(Z_train,G_train)
-      ZTG_ginv_train <- ginv(ZTG_train)
+      ZTG_ginv_train <- MASS::ginv(ZTG_train)
 
       #if p_train<n_train then CIV initial point (on global data) is used.
       #if p_train>n_train then in the inner-loop either CCA or CIV used on local data
@@ -991,9 +994,10 @@ smooth_CIV <- function(G,X,Z,Y, lambda_list = NULL, k_folds =10,
 #' @title select IVs from a smooth_IV object (experimental function).
 #' @description this function removes IVs with extreme low correlation and extreme high prediction error.
 #' This is an experimental function to check how many redundant solutions are found in smooth.opt object.
-#' @param smooth_IV: an object from smooth_CIV() function.
-#' @param MR.data: data frame containing G,X,Z,Y.
-#' @param ......: default values for other tuning parameters.
+#' @param smooth_IV an object from smooth_CIV() function.
+#' @param MR.data data frame containing G,X,Z,Y.
+#' @param crit correlation threshold to remove highly correlated IVs. Default is 0.9.
+#' @param sigma_min minimum sigma threshold for filtering. Default is 0.01.
 #' @return IV_mat: the final matrix of CIV instruments.
 #' @return u_mat: the final CIV solutions of u. Each column is a distinct solution.
 #' @examples
@@ -1083,9 +1087,9 @@ rm_outlier_IV <- function(smooth_IV, MR.data, crit=0.9,sigma_min=0.01){
 
 #' @title Two stage least square method.
 #' @description This function implement ordinary two stage least square regression and provide variance estimation (if requested).
-#' @param MR.data: data frame containing G,X,Z,Y.
-#' @param Fstats: return F-statistics or not. If multiple phenotypes (X) are used, Pillai statistics will be used instead.
-#' @param var_cal: return variance estimation or not.
+#' @param MR.data data frame containing G,X,Z,Y.
+#' @param Fstats return F-statistics or not. If multiple phenotypes (X) are used, Pillai statistics will be used instead.
+#' @param var_cal return variance estimation or not.
 #' @return coef: the causal effect estimation \eqn{\beta}.
 #' @return var: the variance estimation of \eqn{\beta}. if var_cal=TRUE.
 #' @return stats: F-statistics (or Pillai statistics). if Fstats=TRUE.
@@ -1133,13 +1137,12 @@ TSLS_IV <- function(MR.data,Fstats=FALSE,var_cal=FALSE){
 
   if(var_cal==TRUE){
     #calcuate the asymtotic variance of this estimator
-    Pz <- G%*% solve(t(G)%*%G) %*% t(G)
+    Pz <- G%*% MASS::ginv(t(G)%*%G) %*% t(G)
 
-    xzzz_inv <- t(X)%*%G %*% solve(t(G)%*%G)
+    xzzz_inv <- t(X)%*%G %*% MASS::ginv(t(G)%*%G)
     xPzx <- solve(t(X)%*%Pz%*%X)
 
-    tsls_fit <- tsls(Y~X, ~G, data=MR.data)
-    resid <- tsls_fit$residuals
+    resid <- as.vector(Y - cbind(1, X) %*% beta_tsls)
 
 
     current_mat <- matrix(0,p,p)
@@ -1195,8 +1198,8 @@ TSLS_IV <- function(MR.data,Fstats=FALSE,var_cal=FALSE){
 #' @title cross-validated Allele score method.
 #' @description This function implement Allele score methods with cross-validation
 #' in the way Stephen Burgess suggested in the Allele score methods paper.
-#' @param MR.data: data frame containing G,X,Z,Y.
-#' @param n_folds: the number of folds for cross-validation.
+#' @param MR.data data frame containing G,X,Z,Y.
+#' @param n_folds the number of folds for cross-validation.
 #' @return weights: the weights for allele score across folds. Each row is a weight vector
 #' corresponding to a specific fold.
 #' @return allele_score: The cross-validated Allele score, which would be used as the new instruments
@@ -1223,7 +1226,7 @@ allele <- function(MR.data, n_folds = 10 ){
   allele_score <- X
   #weights is a matrix where each row contains weight from each folds
   weights <- NULL
-  flds <- createFolds(c(1:n), k = n_folds, list = TRUE, returnTrain = FALSE)
+  flds <- caret::createFolds(c(1:n), k = n_folds, list = TRUE, returnTrain = FALSE)
 
   for(cv_folds in 1:n_folds){
 
@@ -1277,7 +1280,7 @@ allele <- function(MR.data, n_folds = 10 ){
 
 #' @title simple linear regression pvalues (internal function.)
 #' @description univaraite t-test pvalues for a regression.
-#' @param modelobject: a regression object.
+#' @param modelobject a regression object.
 #' @return p: pvalue.
 #' @export
 lmp <- function (modelobject) {
@@ -1291,8 +1294,8 @@ lmp <- function (modelobject) {
 #' @title univariate T-test p-values.
 #' @description Given response $Y$ and a set of features $X$, this
 #' function obtains univariate T-test p-values for each of the feature for selection purpose.
-#' @param Y: response variable. \eqn{n \times 1}.
-#' @param X: the independent features.\eqn{n \times p}.
+#' @param Y response variable. \eqn{n \times 1}.
+#' @param X the independent features.\eqn{n \times p}.
 #' @return pvalue_list: the list of Pvalues for feature selection based on univariate T-test.
 #' @examples
 #' data(simulation)

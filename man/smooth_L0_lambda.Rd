@@ -25,33 +25,39 @@ smooth_L0_lambda(
 )
 }
 \arguments{
-\item{initial:}{the initial point of u for updating. The CIV solution will be used as the initial point if no choice is made.}
+\item{initial}{the initial point of u for updating. The CIV solution will be used as the initial point if no choice is made.}
 
-\item{G:}{SNP matrix with dimension \eqn{n \times p}.}
+\item{null_space}{null space of matrix \eqn{G'Z}.}
 
-\item{X:}{phenotype of interest.}
+\item{G}{SNP matrix with dimension \eqn{n \times p}.}
 
-\item{Z:}{pleiotropic phenotype Z.}
+\item{X}{phenotype of interest.}
 
-\item{GTG:}{\eqn{G`G}}
+\item{GTG}{\eqn{G'G}}
 
-\item{GTMG:}{\eqn{G`X(X`X)^{-1}X`G}.}
+\item{lambda}{a given value (must be specified) for regularization parameter \eqn{\lambda}.}
 
-\item{ZTG:}{\eqn{Z`G}}
+\item{sigma_min}{the minimum value of \eqn{\sigma}. Default is 0.01.}
 
-\item{GTZ:}{\eqn{G`Z}}
+\item{sigma_up}{the multiplier for updating \eqn{\sigma}. Default is 0.5.}
 
-\item{ZTG_ginv:}{general inverse of \eqn{Z`G} (ginv(\eqn{Z`G})).}
+\item{stepsize}{the stepsize for updating u. Default is 0.1.}
 
-\item{null_space:}{null space of matrices G`Z (null(G`Z)).}
+\item{conv_iters}{the maximum steps when a converged solution is found. Default is 5.}
 
-\item{lambda:}{a given value (must be specified) for regularization parameter \eqn{\lambda}.}
+\item{stepsize_last}{the smaller stepsize for refining the solution. Default is 0.0001.}
 
-\item{accuracy_par:}{the accuracy threshold parameter to determine if the algorithm converged to a local maximum. Default is 1e-10.}
+\item{last_conv_iters}{the maximum iterations to run. Default is 2000.}
 
-\item{last_conv_iters:}{the maximum iterations to run. Default is 2000.}
+\item{GTMG}{\eqn{G'X(X'X)^{-1}X'G}.}
 
-\item{......:}{default values for other tuning parameters.}
+\item{ZTG}{\eqn{Z'G}}
+
+\item{GTZ}{\eqn{G'Z}}
+
+\item{ZTG_ginv}{general inverse of \eqn{Z'G}.}
+
+\item{accuracy_par}{the accuracy threshold parameter. Default is 1e-10.}
 }
 \value{
 mat_u: the trace of all updated iterations of u.
@@ -83,7 +89,7 @@ M <- tcrossprod ( tcrossprod ( X , solve(crossprod(X,X) ) ), X )
 GTMG <- crossprod(G, crossprod(M,G))
 ZTG <- crossprod(Z,G)
 GTZ <- crossprod(G,Z)
-null_space <- Null( GTZ)
+null_space <- MASS::Null( GTZ)
 ZTG_ginv <- MASS::ginv(ZTG)
 lambda <- 1
 smooth.lambda1 <- smooth_L0_lambda(null_space = null_space, G = G, X = X, GTG = GTG, lambda = lambda,

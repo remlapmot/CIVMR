@@ -7,11 +7,15 @@
 pcc_IV(A, B, G, inv_GG_square, no_IV = ncol(G) - ncol(B))
 }
 \arguments{
-\item{A:}{matrix given by LA_decomposition().}
+\item{A}{matrix given by LA_decomposition().}
 
-\item{B:}{matrix given by LA_decomposition().}
+\item{B}{matrix given by LA_decomposition().}
 
-\item{G:}{original instruments.}
+\item{G}{original instruments.}
+
+\item{inv_GG_square}{inverse square root of G'G, given by LA_decomposition().}
+
+\item{no_IV}{number of instrumental variables to compute. Default is ncol(G)-ncol(B).}
 }
 \value{
 u_max: the solution of u that would maximize the constrained correlation problem.

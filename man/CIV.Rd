@@ -7,7 +7,7 @@
 CIV(MR.data)
 }
 \arguments{
-\item{MR.data:}{A data.frame() object containg G,X,Z,Y.}
+\item{MR.data}{A data.frame() object containg G,X,Z,Y.}
 }
 \value{
 c: solution vector to the constrained maximization problem.

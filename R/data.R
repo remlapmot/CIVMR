@@ -9,17 +9,18 @@
 #' @docType data
 #'
 #' @usage data(ADNI)
-#' @param ADNI$Y: the Alzheimer's disease status. Continuous variable. The raw status is binary variable,
-#' and we adjusted it for confounding factors such as sex, age, education ... etc.
-#' @param ADNI$X: The phenotype of interest \eqn{A \beta} Continuous variable.
-#' @param ADNI$Z: The potential pleiotropic phenotypes (Ptau, Ttau, Glucose levels). Continuous variables.
-#' @param ADNI$G: genotypes. The adjusted dosage of 20 SNPs.
 #'
-#' @format An object of class \code{"data.frame"}.
+#' @format A data.frame with 491 rows and the following components:
+#' \describe{
+#'   \item{Y}{the Alzheimer's disease status (continuous, adjusted for confounders).}
+#'   \item{X}{The phenotype of interest: \eqn{A \beta} (continuous).}
+#'   \item{Z}{The potential pleiotropic phenotypes: Ptau, Ttau, Glucose levels (continuous).}
+#'   \item{G}{Genotypes: adjusted dosage of 20 SNPs.}
+#' }
 #'
 #' @keywords dataset
 #'
-#' @references
+#' @references Mueller, S. G., et al. (2005). Ways toward an early diagnosis in Alzheimer's disease: the ADNI. Alzheimer's & Dementia, 1(1), 55-66.
 #'
 #' @examples
 #' data(ADNI)

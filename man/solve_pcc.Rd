@@ -7,9 +7,9 @@
 solve_pcc(A, B)
 }
 \arguments{
-\item{A:}{matrix given by LA_decomposition().}
+\item{A}{matrix given by LA_decomposition().}
 
-\item{B:}{matrix given by LA_decomposition().}
+\item{B}{matrix given by LA_decomposition().}
 }
 \value{
 c: solution to the constrained maximization problem.

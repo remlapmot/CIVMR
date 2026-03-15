@@ -7,11 +7,11 @@
 SNP_reduction(snp_matrix, crit_high_cor = 0.8, maf_crit = 0.01)
 }
 \arguments{
-\item{snp_matrix:}{SNP matrix with dimension n * p.}
+\item{snp_matrix}{SNP matrix with dimension n * p.}
 
-\item{crit_high_cor:}{criteria to choose highly correlated SNPs.}
+\item{crit_high_cor}{criteria to choose highly correlated SNPs.}
 
-\item{maf_crit:}{criteria to choose rare SNPs.}
+\item{maf_crit}{criteria to choose rare SNPs.}
 }
 \value{
 sel_snp: the new dosage matrix of selected SNPs.

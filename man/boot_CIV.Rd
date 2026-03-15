@@ -7,9 +7,9 @@
 boot_CIV(MR.data, n_boots = 10)
 }
 \arguments{
-\item{MR.data:}{a data frame containing G,X,Z,Y.}
+\item{MR.data}{a data frame containing G,X,Z,Y.}
 
-\item{n_boots:}{number of bootstrap samples.}
+\item{n_boots}{number of bootstrap samples.}
 }
 \value{
 boots.u: bootstrapped CIV solution u (without correction).

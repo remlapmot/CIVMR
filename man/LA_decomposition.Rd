@@ -7,11 +7,11 @@
 LA_decomposition(G, X, Z)
 }
 \arguments{
-\item{G:}{original instruments with dimension nXp.}
+\item{G}{original instruments with dimension nXp.}
 
-\item{X:}{phenotype of interest. dimension nXk.}
+\item{X}{phenotype of interest. dimension nXk.}
 
-\item{Z:}{possible pleiotropic phenotypes which have been measured. dimension nXr.}
+\item{Z}{possible pleiotropic phenotypes which have been measured. dimension nXr.}
 }
 \value{
 A list of matrices which will be called by solv_pcc() and pcc_IV().

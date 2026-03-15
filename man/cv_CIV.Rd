@@ -7,9 +7,9 @@
 cv_CIV(MR.data, n_folds = 10)
 }
 \arguments{
-\item{MR.data:}{a data frame containing G,X,Z,Y.}
+\item{MR.data}{a data frame containing G,X,Z,Y.}
 
-\item{n_folds:}{number of folds for cross-validation.}
+\item{n_folds}{number of folds for cross-validation.}
 }
 \value{
 weights: A matrix with dimension \eqn{n_folds * p}. Each row is a CIV solution \eqn{c} from a specific fold.

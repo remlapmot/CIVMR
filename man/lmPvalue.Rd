@@ -7,9 +7,9 @@
 lmPvalue(Y, X)
 }
 \arguments{
-\item{Y:}{response variable. \eqn{n \times 1}.}
+\item{Y}{response variable. \eqn{n \times 1}.}
 
-\item{X:}{the independent features.\eqn{n \times p}.}
+\item{X}{the independent features.\eqn{n \times p}.}
 }
 \value{
 pvalue_list: the list of Pvalues for feature selection based on univariate T-test.

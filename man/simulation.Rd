@@ -5,20 +5,16 @@
 \alias{simulation}
 \title{simulation Data.}
 \format{
-An object of class \code{"data.frame"}.
+A data.frame with 500 rows and the following components:
+\describe{
+  \item{Y}{the simulated outcome (continuous).}
+  \item{X}{The simulated phenotype of interest (continuous).}
+  \item{Z}{The simulated pleiotropic phenotype (continuous).}
+  \item{G}{The simulated genotypes: dosage of 9 independent SNPs (MAF = 0.3).}
+}
 }
 \usage{
 data(simulation)
-}
-\arguments{
-\item{simulation$Y:}{the simulated outcome Y. Continuous variable.}
-
-\item{simulation$X:}{The simulated phenotype of interest X. Continuous variable.}
-
-\item{simulation$Z:}{The potential pleiotropic phenotype Z. Continuous variable.}
-
-\item{simulation$G:}{The simulated genotypes. The dosage of 9 independent SNP variants
-were simulated with a minor allele frequency of 0.3 for all 500 subjects.}
 }
 \description{
 A simulated data using the same framework from simulation series I in the CIV paper.
@@ -35,5 +31,8 @@ X <- simulation$X
 Z <- simulation$Z
 geno <- simulation$G
 outcome <- simulation$Y
+}
+\references{
+Jiang, L. et al. Constrained Instruments and its Application to Mendelian Randomization with Pleiotropy.
 }
 \keyword{dataset}

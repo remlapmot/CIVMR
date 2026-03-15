@@ -7,11 +7,11 @@
 TSLS_IV(MR.data, Fstats = FALSE, var_cal = FALSE)
 }
 \arguments{
-\item{MR.data:}{data frame containing G,X,Z,Y.}
+\item{MR.data}{data frame containing G,X,Z,Y.}
 
-\item{Fstats:}{return F-statistics or not. If multiple phenotypes (X) are used, Pillai statistics will be used instead.}
+\item{Fstats}{return F-statistics or not. If multiple phenotypes (X) are used, Pillai statistics will be used instead.}
 
-\item{var_cal:}{return variance estimation or not.}
+\item{var_cal}{return variance estimation or not.}
 }
 \value{
 coef: the causal effect estimation \eqn{\beta}.

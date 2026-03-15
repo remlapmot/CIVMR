@@ -7,7 +7,7 @@
 lmp(modelobject)
 }
 \arguments{
-\item{modelobject:}{a regression object.}
+\item{modelobject}{a regression object.}
 }
 \value{
 p: pvalue.

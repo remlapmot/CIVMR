@@ -7,9 +7,9 @@
 allele(MR.data, n_folds = 10)
 }
 \arguments{
-\item{MR.data:}{data frame containing G,X,Z,Y.}
+\item{MR.data}{data frame containing G,X,Z,Y.}
 
-\item{n_folds:}{the number of folds for cross-validation.}
+\item{n_folds}{the number of folds for cross-validation.}
 }
 \value{
 weights: the weights for allele score across folds. Each row is a weight vector

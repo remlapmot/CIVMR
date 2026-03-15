@@ -12,17 +12,18 @@
 #' @docType data
 #'
 #' @usage data(simulation)
-#' @param simulation$Y: the simulated outcome Y. Continuous variable.
-#' @param simulation$X: The simulated phenotype of interest X. Continuous variable.
-#' @param simulation$Z: The potential pleiotropic phenotype Z. Continuous variable.
-#' @param simulation$G: The simulated genotypes. The dosage of 9 independent SNP variants
-#' were simulated with a minor allele frequency of 0.3 for all 500 subjects.
 #'
-#' @format An object of class \code{"data.frame"}.
+#' @format A data.frame with 500 rows and the following components:
+#' \describe{
+#'   \item{Y}{the simulated outcome (continuous).}
+#'   \item{X}{The simulated phenotype of interest (continuous).}
+#'   \item{Z}{The simulated pleiotropic phenotype (continuous).}
+#'   \item{G}{The simulated genotypes: dosage of 9 independent SNPs (MAF = 0.3).}
+#' }
 #'
 #' @keywords dataset
 #'
-#' @references
+#' @references Jiang, L. et al. Constrained Instruments and its Application to Mendelian Randomization with Pleiotropy.
 #'
 #' @examples
 #' data(simulation)

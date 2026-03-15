@@ -219,7 +219,8 @@ There are distinct solutions/weights been found from smooth_CIV(). The figure of
 
 ```{r, fig.show='hold'}
 plot(civ.smooth$u_mat[,civ.iv$id_snp[1]],xlab="Solution 1",ylab="weights")
-plot(civ.smooth$u_mat[,civ.iv$id_snp[2]],xlab="Solution 2",ylab="weights")
+if(length(civ.iv$id_snp) >= 2)
+  plot(civ.smooth$u_mat[,civ.iv$id_snp[2]],xlab="Solution 2",ylab="weights")
 ```
 
 As we can see, the CIV_smooth solution is approximately sparse for SNP selection purpose. The consolidated causal effect estimation of all instrumental variable methods from CIVMR are also shown as follows:

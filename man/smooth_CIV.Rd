@@ -22,37 +22,33 @@ smooth_CIV(
 )
 }
 \arguments{
-\item{initial:}{the initial value for updating u.}
+\item{G}{SNP matrix with dimension \eqn{n \times p}.}
 
-\item{G:}{SNP matrix with dimension \eqn{n \times p}.}
+\item{X}{phenotype of interest.}
 
-\item{X:}{phenotype of interest.}
+\item{Z}{pleiotropic phenotype Z.}
 
-\item{Z:}{pleiotropic phenotype Z.}
+\item{Y}{the disease outcome Y.}
 
-\item{Y:}{the disease outcome Y.}
+\item{lambda_list}{a list of values for regularization parameter lambda. A default list will be chosen if not provided.}
 
-\item{lambda_list:}{a list of values for regularization parameter lambda. A default list will be chosen if not provided.}
+\item{k_folds}{number of folds for cross-validation (to find optimum \eqn{\lambda}). default = 10.}
 
-\item{k_folds:}{number of folds for cross-validation (to find optimum \eqn{\lambda}). default = 10.}
+\item{sigma_min}{the minimum value of \eqn{\sigma}. default = 0.01.}
 
-\item{n_IV:}{the number of initial points chosen to explore potential multiple modes. The converged
-solutions will be screened to delete redundant solutions. So the final solutions will be less or equal to n_IV. default = 100.}
+\item{sigma_up}{the moving down multiplier. default = 0.5.}
 
-\item{sigma_min:}{the minimum value of \eqn{\sigma} (corresponding to the closeast approximation of \eqn{L_0} penalty). default = 0.01.}
+\item{stepsize}{the stepsize to move solution u. default = 0.1.}
 
-\item{sigma_up:}{the moving down multiplier. \eqn{\sigma_{j+1} = sigma_up \times \sigma_{j}}. default = 0.5.}
+\item{conv_iters}{the maximum steps when a converged solution is found. default = 5.}
 
-\item{stepsize:}{the stepsize to move solution u. default = 0.1.}
+\item{stepsize_last}{the smaller stepsize for refining the solution. default = 0.0001.}
 
-\item{conv_iters:}{the maximum steps to allow updating when a converged solution is found. default =5.}
+\item{last_conv_iters}{the maximum iterations to run. default = 2000.}
 
-\item{stepsize_last:}{When a converged solution is found with stepsize, we update this solution with a smaller stepsize to achive a more precise
-local maximum solution. default = 0.0001.}
+\item{method_lambda}{method to select lambda. default = "er".}
 
-\item{last_conv_iters:}{the maximum iterations to run in the stage of ``refining" optimum solution. default = 2000.}
-
-\item{......:}{default values for other tuning parameters.}
+\item{n_IV}{the number of initial points to explore potential multiple modes. default = 100.}
 }
 \value{
 opt_lambda: the chosen optimum value of \eqn{\lambda} corresponding to the minimum projected prediction error (see paper).

@@ -7,11 +7,13 @@
 rm_outlier_IV(smooth_IV, MR.data, crit = 0.9, sigma_min = 0.01)
 }
 \arguments{
-\item{smooth_IV:}{an object from smooth_CIV() function.}
+\item{smooth_IV}{an object from smooth_CIV() function.}
 
-\item{MR.data:}{data frame containing G,X,Z,Y.}
+\item{MR.data}{data frame containing G,X,Z,Y.}
 
-\item{......:}{default values for other tuning parameters.}
+\item{crit}{correlation threshold to remove highly correlated IVs. Default is 0.9.}
+
+\item{sigma_min}{minimum sigma threshold for filtering. Default is 0.01.}
 }
 \value{
 IV_mat: the final matrix of CIV instruments.

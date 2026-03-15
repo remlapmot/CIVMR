@@ -7,9 +7,9 @@
 IV_reduction(snp_matrix, crit_high_cor = 0.8)
 }
 \arguments{
-\item{snp_matrix:}{IV matrix with dimension n * p.}
+\item{snp_matrix}{IV matrix with dimension n * p.}
 
-\item{crit_high_cor:}{criteria to choose highly correlated SNPs. default is 0.8 correlation.}
+\item{crit_high_cor}{criteria to choose highly correlated SNPs. default is 0.8 correlation.}
 }
 \value{
 sel_snp: the selected IVs.
