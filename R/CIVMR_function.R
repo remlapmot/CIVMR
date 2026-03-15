@@ -14,7 +14,7 @@
 
 LA_decomposition <- function(G,X,Z){
 
-  temp_cor <- cor(G)
+  temp_cor <- stats::cor(G)
   diag(temp_cor) <- 0
   if(max(abs(temp_cor))>0.99)print("redundant SNPs in G")
 
@@ -192,7 +192,7 @@ CIV <- function(MR.data){
 #' data(simulation)
 #' cv.civ <- cv_CIV(simulation)
 #' #strong correlation between CIV solutions from different folds.
-#' cor(t(cv.civ$weights))
+#' stats::cor(t(cv.civ$weights))
 #' @export
 cv_CIV <- function(MR.data, n_folds = 10 ){
 
@@ -314,8 +314,8 @@ boot_CIV <- function(MR.data, n_boots = 10 ){
     boot_Y <- Y[obs_id]
 
     #to avoid singularity
-    cor_g <- cor(boot_G)
-    #cor_z <- cor(boot_Z)
+    cor_g <- stats::cor(boot_G)
+    #cor_z <- stats::cor(boot_Z)
     diag(cor_g) <- 0
 
     #we keep re-sampling if the previous sampled Gs are highly correlated
@@ -328,8 +328,8 @@ boot_CIV <- function(MR.data, n_boots = 10 ){
       boot_G <- G[obs_id,]
       boot_Y <- Y[obs_id]
 
-      cor_g <- cor(boot_G)
-      #cor_z <- cor(boot_Z)
+      cor_g <- stats::cor(boot_G)
+      #cor_z <- stats::cor(boot_Z)
       diag(cor_g) <- 0
     }
 
@@ -392,7 +392,7 @@ SNP_reduction <- function(snp_matrix,crit_high_cor=0.8,maf_crit =0.01){
   sel_snp <- snp_matrix[,1]
   id_snp <- 1
   for(j in 2:ncol(snp_matrix)){
-    if( (max(abs(cor(sel_snp,snp_matrix[,j]) )) <crit_high_cor) && (length(unique(snp_matrix[,j]))>1)  )
+    if( (max(abs(stats::cor(sel_snp,snp_matrix[,j]) )) <crit_high_cor) && (length(unique(snp_matrix[,j]))>1)  )
     {sel_snp <- cbind(sel_snp, snp_matrix[,j])
     id_snp <- c(id_snp,j)
     }
@@ -437,7 +437,7 @@ IV_reduction <- function(snp_matrix,crit_high_cor=0.8){
   sel_snp <- snp_matrix[,1]
   id_snp <- 1
   for(j in 2:ncol(snp_matrix)){
-    if( (max(abs(cor(sel_snp,snp_matrix[,j]) )) <crit_high_cor) && (length(unique(snp_matrix[,j]))>1)  )
+    if( (max(abs(stats::cor(sel_snp,snp_matrix[,j]) )) <crit_high_cor) && (length(unique(snp_matrix[,j]))>1)  )
     {sel_snp <- cbind(sel_snp, snp_matrix[,j])
     id_snp <- c(id_snp,j)
     }
@@ -506,7 +506,7 @@ smooth_L0_lambda <- function(initial = NULL, null_space, G,X,GTG,
   #there is no randomness in this algorithm so for different lambda
   #we always start from the same initial point
   if(length(initial)==0){
-    #initial <- null_space %*% c( rnorm(ncol(null_space) ,mean=0,sd= 1) )
+    #initial <- null_space %*% c( stats::rnorm(ncol(null_space) ,mean=0,sd= 1) )
 
     #if we have multiple columns in X, we use sparse cca to find an initial guess
     if(length(ncol(X))>1){
@@ -905,7 +905,7 @@ smooth_CIV <- function(G,X,Z,Y, lambda_list = NULL, k_folds =10,
   finish <- 0
   #find multiple optimal IV using  different random initial values.
   for(temp in 1:(n_IV-1)){
-    smooth <- smooth_L0_lambda(initial = rnorm(p), null_space = null_space,
+    smooth <- smooth_L0_lambda(initial = stats::rnorm(p), null_space = null_space,
                                G=G, X=X, GTG=GTG,
                                lambda=opt_lambda, sigma_min = sigma_min,
                                sigma_up =sigma_up,
@@ -1031,7 +1031,7 @@ rm_outlier_IV <- function(smooth_IV, MR.data, crit=0.9,sigma_min=0.01){
 
     temp_u <- smooth_IV$u_mat[,j]
     temp_IV <- IV_mat[,j]
-    cor_pen_list <- c(cor_pen_list, cor(temp_IV,X) - p*smooth_IV$opt_lambda +
+    cor_pen_list <- c(cor_pen_list, stats::cor(temp_IV,X) - p*smooth_IV$opt_lambda +
                         smooth_IV$opt_lambda *sum(exp(-temp_u^2/2/sigma_min^2))
     )
 
@@ -1050,10 +1050,10 @@ rm_outlier_IV <- function(smooth_IV, MR.data, crit=0.9,sigma_min=0.01){
   #we need to remove some columns of G according to a criteria(er_list or cor_list)
 
   #we identify the outliers in er_list and remove all these IVs
-  id.er.outliers <- which(er_list > (  quantile(er_list,0.75) + 1.5*IQR(er_list) ) )
+  id.er.outliers <- which(er_list > (  stats::quantile(er_list,0.75) + 1.5*stats::IQR(er_list) ) )
 
   #remove these IVs with too low correlation(penalized) with X
-  id.cor.outliers <- which(cor_pen_list < (  quantile(cor_pen_list,0.25) - 1.5*IQR(cor_pen_list) ) )
+  id.cor.outliers <- which(cor_pen_list < (  stats::quantile(cor_pen_list,0.25) - 1.5*stats::IQR(cor_pen_list) ) )
 
   id_iv <- union(id.er.outliers,id.cor.outliers)
 
@@ -1068,7 +1068,7 @@ rm_outlier_IV <- function(smooth_IV, MR.data, crit=0.9,sigma_min=0.01){
     select_iv_mat <-IV_mat[,1]
     select_id <- id_iv[1]
     for(i in 2:ncol(IV_mat)){
-      if( max(abs(cor(select_iv_mat,IV_mat[,i])))<crit){
+      if( max(abs(stats::cor(select_iv_mat,IV_mat[,i])))<crit){
         #print( c( dim(select_iv_mat),i) )
         select_iv_mat <- cbind(select_iv_mat,IV_mat[,i] )
         select_u_mat <- cbind(select_u_mat, u_mat[,i])
@@ -1125,12 +1125,12 @@ TSLS_IV <- function(MR.data,Fstats=FALSE,var_cal=FALSE){
   #tsls_fit <- tsls(y~X, ~G, data=MR.data)
 
   #the naive implementation
-  x_fit<- lm(X~G,data=MR.data)$fitted.values
+  x_fit<- stats::lm(X~G,data=MR.data)$fitted.values
 
-  x_fit<- lm((MR.data$X)~(MR.data$G) )$fitted.values
+  x_fit<- stats::lm((MR.data$X)~(MR.data$G) )$fitted.values
 
 
-  y_fit<- lm(MR.data$Y ~ x_fit)
+  y_fit<- stats::lm(MR.data$Y ~ x_fit)
 
   #calculate the beta_iv
   beta_tsls <- y_fit$coefficients
@@ -1172,14 +1172,14 @@ TSLS_IV <- function(MR.data,Fstats=FALSE,var_cal=FALSE){
     #now give out the 1st stage F statistics (strong instrument or not) and its pvalue
 
     if(ncol(X)==1){
-      lmfit <- lm(X~G)
+      lmfit <- stats::lm(X~G)
       stats <- summary(lmfit)$fstatistic[1]
-      pvalue <- (anova(lmfit)$`Pr(>F)`)[1]
+      pvalue <- (stats::anova(lmfit)$`Pr(>F)`)[1]
     }
 
     else{
 
-      MVR <- manova(X~G)
+      MVR <- stats::manova(X~G)
 
       #record Pillai statistics and p value, and association with y
       stats <- summary(MVR)$stats[1,"Pillai"]
@@ -1243,7 +1243,7 @@ allele <- function(MR.data, n_folds = 10 ){
     G_train <- G[train_index,]
     G_apply  <- G[apply_index,]
 
-    coef_train <- lm(X_train~G_train)$coefficients
+    coef_train <- stats::lm(X_train~G_train)$coefficients
 
     coef_train[which(is.na(coef_train))] <- 0
 
@@ -1288,7 +1288,7 @@ allele <- function(MR.data, n_folds = 10 ){
 lmp <- function (modelobject) {
   if (!inherits(modelobject, "lm")) stop("Not an object of class 'lm' ")
   f <- summary(modelobject)$fstatistic
-  p <- pf(f[1],f[2],f[3],lower.tail=F)
+  p <- stats::pf(f[1],f[2],f[3],lower.tail=F)
   attributes(p) <- NULL
   return(p)
 }
@@ -1308,7 +1308,7 @@ lmPvalue <- function(Y,X){
   pvalue_list <- NULL
 
   for(j in 1:ncol(X)){
-    fit <- (lm(Y~X[,j]))
+    fit <- (stats::lm(Y~X[,j]))
     pvalue_list <- c( pvalue_list, lmp(fit) )
   }
   pvalue_list
