@@ -92,7 +92,8 @@ GTZ <- crossprod(G,Z)
 null_space <- MASS::Null( GTZ)
 ZTG_ginv <- MASS::ginv(ZTG)
 lambda <- 1
-smooth.lambda1 <- smooth_L0_lambda(null_space = null_space, G = G, X = X, GTG = GTG, lambda = lambda,
-GTMG = GTMG, ZTG = ZTG, GTZ = GTZ, ZTG_ginv = ZTG_ginv )
+smooth.lambda1 <- smooth_L0_lambda(null_space = null_space, G = G, X = X,
+  GTG = GTG, lambda = lambda,
+  GTMG = GTMG, ZTG = ZTG, GTZ = GTZ, ZTG_ginv = ZTG_ginv)
 plot(smooth.lambda1$opt_solution)  #plot the final solution u
 }
