@@ -1008,7 +1008,8 @@ smooth_CIV <- function(G,X,Z,Y, lambda_list = NULL, k_folds =10,
 #' Y <- simulation$Y
 #' smooth.opt <- smooth_CIV( G,X,Z,Y, k_folds = 10)
 #' smooth.clean <- rm_outlier_IV(smooth.opt, simulation)
-#' dim(smooth.clean$u_mat) #check how many solutions are different. It is probability much less than 100.
+#' #check how many solutions are different. It is probability much less than 100.
+#' dim(smooth.clean$u_mat)
 #' @export
 
 
