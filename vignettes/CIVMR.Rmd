@@ -92,7 +92,7 @@ Finally, we show an example of using this package to conduct MR analysis on real
 
 ```{r,out.width='\\textwidth', fig.width = 5, fig.height = 5, fig.align='center',message=FALSE, warning=FALSE}
 library(CIVMR)
-data(list=ADNI)
+data("ADNI")
 list_mat <- NULL
 list_mat <- rbind(list_mat, lmPvalue(ADNI$X,ADNI$G) )
 list_mat <- rbind(list_mat, lmPvalue(ADNI$Z[,1],ADNI$G) )
