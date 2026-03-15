@@ -1,10 +1,10 @@
 ---
-title: "Package 'CIVMR' "
+title: "Package 'CIVMR'"
 author: "Lai Jiang"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{Package 'CIVMR'}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
