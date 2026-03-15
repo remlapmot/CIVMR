@@ -684,8 +684,8 @@ smooth_L0_lambda <- function(initial = NULL, null_space, G,X,GTG,
   #opt_solution <- u_mat[,ncol(u_mat)]
 
   #we access the target values of the u from the last stage
-  last_stage_value <-   tail(target_value, n=  sum(  tail( n_iters_stage, 2  )  )   )
-  opt_solution <- u_mat[,  (  length(target_value)-  sum(tail(n_iters_stage, 2))) + which.min(last_stage_value)]
+  last_stage_value <-   utils::tail(target_value, n=  sum(  utils::tail( n_iters_stage, 2  )  )   )
+  opt_solution <- u_mat[,  (  length(target_value)-  sum(utils::tail(n_iters_stage, 2))) + which.min(last_stage_value)]
 
   #output
   list(mat_u = u_mat, value_list = target_value, unstrained_val_list = target_cor,
@@ -785,7 +785,7 @@ smooth_CIV <- function(G,X,Z,Y, lambda_list = NULL, k_folds =10,
   #preserve the global optimal initial value for the final smooth fitting
   global_initial <- initial
 
-  pb <- txtProgressBar(min=0, max=length(lambda_list), style=3)
+  pb <- utils::txtProgressBar(min=0, max=length(lambda_list), style=3)
   finish <- 0
 
   flds <- caret::createFolds(c(1:n), k = k_folds, list = TRUE, returnTrain = FALSE)
@@ -878,7 +878,7 @@ smooth_CIV <- function(G,X,Z,Y, lambda_list = NULL, k_folds =10,
     G_pred_error_list <- c(G_pred_error_list, G_pred_error)
 
     finish <- finish +1
-    setTxtProgressBar(pb, finish)
+    utils::setTxtProgressBar(pb, finish)
   }
   cat("\n")
 
@@ -901,7 +901,7 @@ smooth_CIV <- function(G,X,Z,Y, lambda_list = NULL, k_folds =10,
   u_mat <- u
 
 
-  pb <- txtProgressBar(min=0, max=(n_IV-1), style=3)
+  pb <- utils::txtProgressBar(min=0, max=(n_IV-1), style=3)
   finish <- 0
   #find multiple optimal IV using  different random initial values.
   for(temp in 1:(n_IV-1)){
@@ -920,7 +920,7 @@ smooth_CIV <- function(G,X,Z,Y, lambda_list = NULL, k_folds =10,
     u_mat <- cbind(u_mat,u)
 
     finish <- finish +1
-    setTxtProgressBar(pb, finish)
+    utils::setTxtProgressBar(pb, finish)
 
   }
   cat("\n")
@@ -935,7 +935,7 @@ smooth_CIV <- function(G,X,Z,Y, lambda_list = NULL, k_folds =10,
   TS_IV_mat <- NULL
   TS_u_mat  <- NULL
 
-  pb <- txtProgressBar(min=0, max=length(lambda_list), style=3)
+  pb <- utils::txtProgressBar(min=0, max=length(lambda_list), style=3)
   finish <- 0
 
   for(temp in 1:(ncol(u_mat))){
@@ -955,7 +955,7 @@ smooth_CIV <- function(G,X,Z,Y, lambda_list = NULL, k_folds =10,
 
 
     finish <- finish +1
-    setTxtProgressBar(pb, finish)
+    utils::setTxtProgressBar(pb, finish)
 
   }
 
