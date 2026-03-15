@@ -27,4 +27,3 @@ plot(civ.fit$c)
 }
 \keyword{LA_decomposition,}
 \keyword{solve_pcc.}
-

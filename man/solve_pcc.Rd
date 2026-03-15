@@ -23,11 +23,10 @@ This function find a unique solutin to the constrained instrument problem given 
 data(simulation)
 #CIV linear algebra decomposition components
 civ.deco <- LA_decomposition(simulation$G,simulation$X,simulation$Z)
-#solve the CIV solution \\eqn{u}
+#solve the CIV solution \eqn{u}
 civ.c <- solve_pcc(civ.deco$A, civ.deco$B)
 #plot the weight c
 plot(civ.c$c)
 }
 \keyword{Cholesky}
 \keyword{decomposition}
-

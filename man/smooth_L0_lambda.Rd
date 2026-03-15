@@ -4,10 +4,25 @@
 \alias{smooth_L0_lambda}
 \title{CIV_smooth solution given \eqn{\lambda}. (Internal function)}
 \usage{
-smooth_L0_lambda(initial = NULL, null_space, G, X, GTG, lambda,
-  sigma_min = 0.01, sigma_up = 0.5, stepsize = 0.1, conv_iters = 5,
-  stepsize_last = 1e-04, last_conv_iters = 2000, GTMG, ZTG, GTZ, ZTG_ginv,
-  accuracy_par = 1e-10)
+smooth_L0_lambda(
+  initial = NULL,
+  null_space,
+  G,
+  X,
+  GTG,
+  lambda,
+  sigma_min = 0.01,
+  sigma_up = 0.5,
+  stepsize = 0.1,
+  conv_iters = 5,
+  stepsize_last = 1e-04,
+  last_conv_iters = 2000,
+  GTMG,
+  ZTG,
+  GTZ,
+  ZTG_ginv,
+  accuracy_par = 1e-10
+)
 }
 \arguments{
 \item{initial:}{the initial point of u for updating. The CIV solution will be used as the initial point if no choice is made.}
@@ -69,10 +84,9 @@ GTMG <- crossprod(G, crossprod(M,G))
 ZTG <- crossprod(Z,G)
 GTZ <- crossprod(G,Z)
 null_space <- Null( GTZ)
-ZTG_ginv <- ginv(ZTG)
+ZTG_ginv <- MASS::ginv(ZTG)
 lambda <- 1
 smooth.lambda1 <- smooth_L0_lambda(null_space = null_space, G = G, X = X, GTG = GTG, lambda = lambda,
 GTMG = GTMG, ZTG = ZTG, GTZ = GTZ, ZTG_ginv = ZTG_ginv )
 plot(smooth.lambda1$opt_solution)  #plot the final solution u
 }
-

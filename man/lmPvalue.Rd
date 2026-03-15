@@ -22,4 +22,3 @@ function obtains univariate T-test p-values for each of the feature for selectio
 data(simulation)
 p.values <- lmPvalue(simulation$X, simulation$G)
 }
-

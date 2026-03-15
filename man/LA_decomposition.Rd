@@ -25,4 +25,3 @@ LA_decomposition(simulation$G,simulation$X,simulation$Z)
 }
 \keyword{Cholesky}
 \keyword{decomposition}
-

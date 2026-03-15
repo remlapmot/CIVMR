@@ -28,4 +28,3 @@ in the way Stephen Burgess suggested in the Allele score methods paper.
 data(simulation)
 allele.score <- allele(simulation,n_folds=10)
 }
-

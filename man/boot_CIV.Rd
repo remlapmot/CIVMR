@@ -27,4 +27,3 @@ boot.civ <- boot_CIV(simulation)
 #plot the bootstrap corrected solution u.
 plot(boot.civ$boots.cor.u)
 }
-

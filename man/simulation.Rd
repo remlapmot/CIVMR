@@ -4,7 +4,9 @@
 \name{simulation}
 \alias{simulation}
 \title{simulation Data.}
-\format{An object of class \code{"data.frame"}.}
+\format{
+An object of class \code{"data.frame"}.
+}
 \usage{
 data(simulation)
 }
@@ -34,8 +36,4 @@ Z <- simulation$Z
 geno <- simulation$G
 outcome <- simulation$Y
 }
-\references{
-
-}
 \keyword{dataset}
-

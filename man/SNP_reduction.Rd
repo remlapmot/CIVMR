@@ -26,4 +26,3 @@ calculate MAF for each snp and delete rare snps with low MAF (e.g. 0.01).
 data(simulation)
 snp.rdc <- SNP_reduction(simulation$G)
 }
-

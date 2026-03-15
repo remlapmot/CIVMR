@@ -4,9 +4,22 @@
 \alias{smooth_CIV}
 \title{CIV_smooth solution with cross-validation.(recommended)}
 \usage{
-smooth_CIV(G, X, Z, Y, lambda_list = NULL, k_folds = 10, sigma_min = 0.01,
-  sigma_up = 0.5, stepsize = 0.1, conv_iters = 5, stepsize_last = 1e-04,
-  last_conv_iters = 2000, method_lambda = "er", n_IV = 100)
+smooth_CIV(
+  G,
+  X,
+  Z,
+  Y,
+  lambda_list = NULL,
+  k_folds = 10,
+  sigma_min = 0.01,
+  sigma_up = 0.5,
+  stepsize = 0.1,
+  conv_iters = 5,
+  stepsize_last = 1e-04,
+  last_conv_iters = 2000,
+  method_lambda = "er",
+  n_IV = 100
+)
 }
 \arguments{
 \item{initial:}{the initial value for updating u.}
@@ -66,4 +79,3 @@ Y <- simulation$Y
 smooth.opt <- smooth_CIV( G,X,Z,Y, k_folds = 10)
 plot(smooth.opt$u_mat[,1])  #plot a solution u.
 }
-

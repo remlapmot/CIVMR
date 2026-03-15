@@ -4,7 +4,9 @@
 \name{ADNI}
 \alias{ADNI}
 \title{ADNI Data.}
-\format{An object of class \code{"data.frame"}.}
+\format{
+An object of class \code{"data.frame"}.
+}
 \usage{
 data(ADNI)
 }
@@ -33,8 +35,4 @@ Z <- ADNI$Z
 G <- ADNI$G
 Y <- ADNI$Y
 }
-\references{
-
-}
 \keyword{dataset}
-

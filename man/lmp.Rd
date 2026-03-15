@@ -15,4 +15,3 @@ p: pvalue.
 \description{
 univaraite t-test pvalues for a regression.
 }
-

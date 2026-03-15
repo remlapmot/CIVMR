@@ -29,4 +29,3 @@ This function implement ordinary two stage least square regression and provide v
 data(simulation)
 TSLS_IV(simulation,Fstats=TRUE,var_cal=TRUE)
 }
-

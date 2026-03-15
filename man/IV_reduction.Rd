@@ -23,4 +23,3 @@ This function remove highly correlated IVs. An upgraded function SNP_reduction()
 data(simulation)
 snp.rdc <- IV_reduction(simulation$G)
 }
-

@@ -31,4 +31,3 @@ cv.civ <- cv_CIV(simulation)
 #strong correlation between CIV solutions from different folds.
 cor(t(cv.civ$weights))
 }
-

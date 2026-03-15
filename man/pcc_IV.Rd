@@ -26,4 +26,3 @@ civ.deco <- LA_decomposition(simulation$G,simulation$X,simulation$Z)
 #solve the CIV solution for c
 civ.mult <- pcc_IV(civ.deco$A, civ.deco$B, simulation$G, civ.deco$inv_GG_square)
 }
-
