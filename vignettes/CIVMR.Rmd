@@ -120,7 +120,7 @@ This Figure shows the association test result between the 4 phenotypes of intere
 
 It can bee seen that most of the 20 SNPs are significantly associated with Amyloid beta under threshold 0.05, this is expected since they are chosen because of their strong associations in previous studies. However, we can also see some of these SNPs are also strongly associated with Ptau/Ttau. This raises questions about pleiotropy, and also the appropriateness of using these SNPs as valid instruments $G$ to infer causal effect of Amyloid  beta ($X$) on AD progression ($Y$). To assess the validity of using these SNPs as instruments, we run the Sargan test:
 
-```{r,  results='asis',message=FALSE, warning=FALSE,results='hide'}
+```{r,  results='hide', eval=FALSE, message=FALSE, warning=FALSE}
 library(AER)
 fm <- ivreg(Y ~ X | G, data = ADNI)
 summary(fm, vcov = sandwich, df = Inf, diagnostics = TRUE)
